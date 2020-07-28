@@ -1512,7 +1512,7 @@ write_fd(int                 *fd,	/* I - File descriptor */
  * 'xform_document()' - Transform a file for printing.
  */
 
-static int				/* O - 0 on success, 1 on error */
+int				/* O - 0 on success, 1 on error */
 xform_document(
     const char       *filename,		/* I - File to transform */
     const char       *informat,		/* I - Input document (MIME media type */
@@ -2095,7 +2095,7 @@ xform_document(
  * 'xform_document()' - Transform a file for printing.
  */
 
-static int				/* O - 0 on success, 1 on error */
+int				/* O - 0 on success, 1 on error */
 xform_document(
     const char       *filename,		/* I - File to transform */
     const char       *informat,		/* I - Input format (MIME media type) */
