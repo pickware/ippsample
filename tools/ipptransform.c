@@ -1556,7 +1556,7 @@ xform_document(
   unsigned		page;		/* Current page */
   unsigned		media_sheets = 0,
 			impressions = 0;/* Page/sheet counters */
-  void *rendering; /* instance of pdf renderer */
+  void *renderingContext; /* instance of pdf renderer */
 
  /*
   * Open the file...
@@ -1573,10 +1573,10 @@ xform_document(
    /*
     * Open the PDF...
     */
-    rendering = renderer.makeRenderer();
-    if(!renderer.openDocument(url, rendering)) {
+    renderingContext = renderer.makeRenderer();
+    if(!renderer.openDocument(url, renderingContext)) {
       // open document failed
-      renderer.deallocate(rendering);
+      renderer.deallocate(renderingContext);
       return 1;
     }
     CFRelease(url);
@@ -1593,11 +1593,11 @@ xform_document(
 	return (1);
       }
 
-      pages = (unsigned)renderer.getPageCount(rendering);
+      pages = (unsigned)renderer.getPageCount(renderingContext);
       if (first > pages)
       {
 	fputs("ERROR: \"page-ranges\" value does not include any pages to print in the document.\n", stderr);
-	renderer.deallocate(rendering);
+	renderer.deallocate(renderingContext);
 	return (1);
       }
 
@@ -1607,7 +1607,7 @@ xform_document(
     else
     {
       first = 1;
-      last  = (unsigned)renderer.getPageCount(rendering);
+      last  = (unsigned)renderer.getPageCount(renderingContext);
     }
 
     pages = last - first + 1;
@@ -1757,7 +1757,7 @@ xform_document(
 
   (*(ras.start_job))(&ras, cb, ctx);
 
-  if (rendering)
+  if (renderingContext)
   {
    /*
     * Render pages in the PDF...
@@ -1801,12 +1801,12 @@ xform_document(
 			band_starty = 0,/* Start line of band */
 			band_endy = 0;	/* End line of band */
 	unsigned char	*lineptr;	/* Pointer to line */
-	if (!renderer.loadPage(page + first - 1, rendering)) {
+	if (!renderer.loadPage(page + first - 1, renderingContext)) {
 	  // Failed loading page
-	  renderer.deallocate(rendering);
+	  renderer.deallocate(renderingContext);
 	  return 1;
 	}
-    transform = renderer.getPageTransform(rendering);
+    transform = renderer.getPageTransform(renderingContext);
 
 	if (Verbosity > 1)
 	  fprintf(stderr, "DEBUG: Printing copy %d/%d, page %d/%d, transform=[%g %g %g %g %g %g]\n", copy + 1, ras.copies, page, pages, transform.a, transform.b, transform.c, transform.d, transform.tx, transform.ty);
@@ -1846,10 +1846,10 @@ xform_document(
 	      if (!(page & 1) && ras.header.Duplex)
 		CGContextConcatCTM(context, back_transform);
 	      CGContextConcatCTM(context, transform);
-          CGContextClipToRect(context, renderer.getPageRect(rendering));
-          if (!renderer.render(context, rendering)) {
+          CGContextClipToRect(context, renderer.getPageRect(renderingContext));
+          if (!renderer.render(context, renderingContext)) {
             // Rendering failed
-            renderer.deallocate(rendering);
+            renderer.deallocate(renderingContext);
             return 1;
           }
 	    CGContextRestoreGState(context);
@@ -1908,7 +1908,7 @@ xform_document(
 	}
       }
     }
-	renderer.deallocate(rendering);
+	renderer.deallocate(renderingContext);
   }
   else
   {
