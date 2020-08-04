@@ -53,10 +53,10 @@ static inline fz_matrix make_matrix(float a, float b, float c, float d, float e,
 typedef void * (*renderer_make_renderer_cb_t)();
 typedef void (*renderer_deallocate_cb_t)(void *);
 typedef bool (*renderer_open_document_cb_t)(CFURLRef, void *);
-typedef int  (*renderer_get_page_count_cb_t)(void *);
+typedef int (*renderer_get_page_count_cb_t)(void *);
 typedef bool (*renderer_load_page_cb_t)(const int, void *);
 typedef CGRect (*renderer_get_page_rect_cb_t)(void *);
-typedef CGAffineTransform  (*renderer_get_page_transform_cb_t)(void *);
+typedef CGAffineTransform (*renderer_get_page_transform_cb_t)(void *);
 typedef bool (*renderer_render_cb_t)(CGContextRef, void *);
 
 extern struct renderer {
@@ -144,7 +144,7 @@ static void	raster_start_page(xform_raster_t *ras, unsigned page, xform_write_cb
 static void	raster_write_line(xform_raster_t *ras, unsigned y, const unsigned char *line, xform_write_cb_t cb, void *ctx);
 static void	usage(int status) _CUPS_NORETURN;
 static ssize_t	write_fd(int *fd, const unsigned char *buffer, size_t bytes);
-int    xform_document(const char *filename, const char *informat, const char *outformat, const char *resolutions, const char *sheet_back, const char *types, int num_options, cups_option_t *options, xform_write_cb_t cb, struct renderer renderer, void *ctx);
+int	xform_document(const char *filename, const char *informat, const char *outformat, const char *resolutions, const char *sheet_back, const char *types, int num_options, cups_option_t *options, xform_write_cb_t cb, struct renderer renderer, void *ctx);
 static int	xform_setup(xform_raster_t *ras, const char *outformat, const char *resolutions, const char *types, const char *sheet_back, int color, unsigned pages, int num_options, cups_option_t *options);
 
 
@@ -1847,7 +1847,6 @@ xform_document(
 		CGContextConcatCTM(context, back_transform);
 	      CGContextConcatCTM(context, transform);
           CGContextClipToRect(context, renderer.getPageRect(rendering));
-          CGContextSetRGBFillColor(context, 0.8, 0.8, 0.8, 1.);
           if (!renderer.render(context, rendering)) {
             // Rendering failed
             renderer.deallocate(rendering);
