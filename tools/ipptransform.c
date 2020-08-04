@@ -2676,12 +2676,6 @@ xform_setup(xform_raster_t *ras,	/* I - Raster information */
   {
     if ((pwg_media = pwgMediaForPWG(media)) == NULL)
       pwg_media = pwgMediaForLegacy(media);
-
-    if (!pwg_media)
-    {
-      fprintf(stderr, "ERROR: Unknown \"media\" value '%s'.\n", media);
-      return (-1);
-    }
   }
   else if ((media_col = cupsGetOption("media-col", num_options, options)) != NULL)
   {
